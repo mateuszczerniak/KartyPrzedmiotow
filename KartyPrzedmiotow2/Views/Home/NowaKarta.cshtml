@@ -1,0 +1,228 @@
+﻿@using KartyPrzedmiotow2.Models
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+@model NowaKarta
+
+@{
+    ViewBag.Title = "Nowa Karta";
+}
+
+<style>
+    :invalid {
+        border-color: red;
+    }
+</style>
+
+<div class="jumbotron">
+    <h1>Karty Przedmiotów</h1>
+    <p class="lead">Dodawanie nowej karty dla przedmiotu.</p>
+</div>
+
+<div class="row align-items-center">
+    <div class="col-md-12">
+
+        @using (Html.BeginForm("NowyProgram", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.HiddenFor(m => m.Id)
+
+            <h2>Opis przedmiotu</h2>
+            <div class="form-group">
+                <label for="kodPrzedmiotu" class="col-sm-2 control-label">Kod przedmiotu</label>
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.Kod, new { @class = "form-control", required = "required" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="nazwaPrzedmiotu" class="col-sm-2 control-label">Nazwa Przedmiotu</label>
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.NazwaPrzedmiotu, new { @class = "form-control", required = "required" })
+                </div>
+            </div>
+
+            <h2>Miejsce przedmiotu w Planie Studiów</h2>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="wydzial" class="col-sm-2 control-label">Wydział</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.WydzialId, Model.Wydzialy.Select(w=> new SelectListItem()
+                       {
+                           Text = w.Nazwa,
+                           Value = w.Id.ToString()
+                       }), new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="kierunek" class="col-sm-2 control-label">Kierunek</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.KierunekId, Model.Wydzialy.FirstOrDefault(w=>w.Id == Model.WydzialId)
+                           ?.Kierunki?.Select(w => new SelectListItem()
+                       {
+                           Text = w.Nazwa,
+                           Value = w.Id.ToString()
+                       }) ?? new List<SelectListItem>(), new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="poziom" class="col-sm-2 control-label">Poziom</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.PoziomId, Model.Poziomy, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="profilKsztalcenia" class="col-sm-2 control-label">Profil kształcenia</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.ProfilKsztalceniaId, Model.ProfileKsztalcenia, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="obszarKsztalcenia" class="col-sm-2 control-label">Obszar kształcenia</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.ObszarKsztalceniaId, Model.ObszaryKsztalcenia, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="grupaPrzedmiotow" class="col-sm-2 control-label">Grupa przedmiotów</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.GrupaPrzedmiotowId, Model.GrupyPrzedmiotow, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="specjalnosc" class="col-sm-2 control-label">Specjalność</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.SpecjalnoscId, Model.Wydzialy.FirstOrDefault(w => w.Id == Model.WydzialId)
+                           ?.Kierunki?.FirstOrDefault(w => w.Id == Model.KierunekId)
+                           ?.Specjalnosci?.Select(w => new SelectListItem()
+                           {
+                               Text = w.Nazwa,
+                               Value = w.Id.ToString()
+                           }) ?? new List<SelectListItem>(), new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="przedmiotDoWyboru" class="col-sm-2 control-label">Przedmiot do wyboru</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.DoWyboru, new SelectList(
+                                new[]
+                                {
+                                    new { Value = "true", Text = "Tak" },
+                                    new { Value = "false", Text = "Nie" },
+                                },
+                                "Value",
+                                "Text",
+                                Model
+                            ), new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="semestr" class="col-sm-2 control-label">Semestr</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.SemestrId, Model.Semestry, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="formaZaliczenia" class="col-sm-2 control-label">Forma zaliczenia</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.FormaZaliczeniaId, Model.FormyZaliczenia, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="punkty" class="col-sm-2 control-label">Punkty ECTS</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.ECTS, new { @class = "form-control", @type = "number", min = "0" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Liczba godzin</h2>
+
+            <div class="form-group row">
+                <label for="liczbaGodzin" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-4">
+                    <label for="stacjonarne" class="col-sm-2 col-form-label">Stacjonarne</label>
+                </div>
+                <div class="col-sm-4">
+                    <label for="niestacjonarne" class="col-sm-2 col-form-label">Niestacjonarne</label>
+                </div>
+            </div>
+
+            for (var i = 0; i < Model.Godziny.Count; i++)
+            {
+                <div class="form-group row">
+                    @Html.HiddenFor(m => Model.Godziny[i].TypLiczbGodzinId)
+                    <label for="wyklad" class="col-sm-2 col-form-label">@Html.Raw(Model.Godziny[i].Nazwa)</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(m => Model.Godziny[i].Stacjonarne, new { @class = "form-control", @type = "number", min = "0" })
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(m => Model.Godziny[i].Niestacjonarne, new { @class = "form-control", @type = "number", min = "0" })
+                    </div>
+                </div>
+            }
+
+
+            <h2>Prowadzący przedmiot</h2>
+            <div class="form-group">
+                <label for="prowadzacy" class="col-sm-2 control-label">Prowadzący przedmiot</label>
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(m => m.WykladowcaId, Model.Wykladowcy, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <p align="center">
+                <button type="submit" class="btn btn-success btn-block">Zapisz</button>
+            </p>
+        }
+    </div>
+
+</div>
+
+<script>
+    var wydzialy = @Html.Raw(Json.Encode(Model.Wydzialy));
+
+    var $wydzial = $('#@(Html.IdFor(m => m.WydzialId))');
+    var $kierunek = $('#@(Html.IdFor(m => m.KierunekId))');
+    var $specjalnosc = $('#@(Html.IdFor(m => m.SpecjalnoscId))');
+    var wydzial = null;
+    var kierunek = null;
+
+    var kierunekChange = function (value) {
+        var kierunekId = isNaN(value) ? $(this).val() : ""+value;
+        kierunek = wydzial.Kierunki.filter(function (kierunek) {
+            return ("" + kierunek.Id) === kierunekId;
+        })[0];
+
+        $specjalnosc.find("option").remove();
+
+        kierunek.Specjalnosci.map(function (k) {
+            $specjalnosc.append("<option value='" + k.Id + "'>" + k.Nazwa + "</option>");
+        });
+    }
+
+    var wydzialChange = function (value) {
+        var wydzialId = isNaN(value) ? $(this).val() : "" + value;
+        wydzial = wydzialy.filter(function (wydzial) {
+            return ("" + wydzial.Id) === wydzialId;
+        })[0];
+
+        $kierunek.find("option").remove();
+
+        wydzial.Kierunki.map(function (k) {
+            $kierunek.append("<option value='" + k.Id + "'>" + k.Nazwa + "</option>");
+        });
+        if (wydzial.Kierunki.length)
+            kierunekChange(wydzial.Kierunki[0].Id);
+        else
+            $specjalnosc.find("option").remove();
+    }
+
+    $wydzial.on("change", wydzialChange);
+
+    $kierunek.on("change", kierunekChange);
+
+    if (!$kierunek.find("option").length) {
+        wydzialChange(wydzialy[0].Id)
+    }
+</script>

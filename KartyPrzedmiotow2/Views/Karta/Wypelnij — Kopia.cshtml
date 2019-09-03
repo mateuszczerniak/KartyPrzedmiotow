@@ -1,0 +1,1930 @@
+﻿<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="~/Scripts/dynamicTable.js"></script>
+@model KartyPrzedmiotow2.Models.Karta
+@{
+    ViewBag.Title = "Karta";
+}
+
+<style>
+    .slider {
+        transition-property: all;
+        transition-duration: 1s;
+        transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+    }
+    .slider.closed {
+        display: none;
+    }
+    .full-width {
+        width: 100%;
+    }
+    .table-name{
+        display: none;
+    }
+    .hide{
+        display: none;
+    }
+</style>
+
+<div class="jumbotron">
+    <h1>Karty Przedmiotów</h1>
+    <p class="lead">Dodawanie nowej karty dla przedmiotu.</p>
+</div>
+
+<div class="row align-items-center">
+
+    @using (Html.BeginForm("Wypelnij", "Karta", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.HiddenFor(m => m.ProgramId)
+
+    
+    <h1 id="opis" class="sectionHeader">Opis ↓</h1>
+
+        <div id="opisDetails" class="col-md-12 slider closed">
+            <h2>Informacje</h2>
+            <div class="form-group row">
+                <label for="nazwaAng" class="col-md-4 col-form-label">Nazwa w języku angielskim</label>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(model => model.NazwaAngielski, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="jezyk" class="col-md-4 col-form-label">Język prowadzenia zajęć</label>
+                <div class="col-md-6">
+                    @Html.DropDownListFor(m => m.JezykiId, Model.Jezyki, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="materialy" class="col-md-4 col-form-label">Materiały dla studentów</label>
+                <div class="col-md-6">
+                    @Html.DropDownListFor(m => m.MaterialyId, Model.Materialy, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="wykladowca" class="col-md-4 col-form-label">Wykładowca</label>
+                <div class="col-md-6">
+                    @Html.DisplayFor(m => m.Imie) @Html.DisplayFor(m => m.Nazwisko)
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="rok" class="col-md-4 col-form-label">Rok akademicki</label>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.Rok, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="opis" class="col-md-4 col-form-label">Krótki opis</label>
+                <div class="col-md-6">
+                    @Html.TextAreaFor(m => m.KrotkiOpis, new { @class = "form-control" })
+                </div>
+            </div>
+            <h2>Cele dydaktyczne</h2>
+            <div class="form-group row">
+                <label for="opis" class="col-md-4 col-form-label">Główny</label>
+                <div class="col-md-6">
+                    @Html.TextAreaFor(m => m.CelGlowny, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="opis" class="col-md-4 col-form-label">Szczegółowy w zakresie wiedzy</label>
+                <div class="col-md-6">
+                    @Html.TextAreaFor(m => m.CelWiedza, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="opis" class="col-md-4 col-form-label">Szczegółowy w zakresie umiejętności</label>
+                <div class="col-md-6">
+                    @Html.TextAreaFor(m => m.CelUmiejetnosci, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="opis" class="col-md-4 col-form-label">Szczegółowy w zakresie kompetencji</label>
+                <div class="col-md-6">
+                    @Html.TextAreaFor(m => m.CelKompetencje, new { @class = "form-control" })
+                </div>
+            </div>
+            <h2>Literatura podstawowa</h2>
+
+            <div class="container" id="tabela1">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <div class="table-name" id="@Html.IdFor(model => model.LiteraturyPodstawowe)" name="@Html.NameFor(model => model.LiteraturyPodstawowe)"></div>
+                        <table class="table table-bordered table-hover" id="tab_logic">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        Tytuł
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="list-rows">
+
+                                @for (var i = 0; i < Model.LiteraturyPodstawowe.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.TextBoxFor(model => model.LiteraturyPodstawowe[i].Nazwa, new { @class = "form-control input-md full-width"})
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a class="add_row btn btn-default pull-left">Dodaj</a>
+                <a class="delete_row pull-right btn btn-default">Usuń</a>
+            </div>
+
+
+
+
+            <h2>Literatura uzupełniająca</h2>
+
+            <div class="container" id="tabela2">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <div class="table-name" id="@Html.IdFor(model => model.LiteraturyUzupelniajace)" name="@Html.NameFor(model => model.LiteraturyUzupelniajace)"></div>
+                        <table class="table table-bordered table-hover" id="tab_logic">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        Tytuł
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="list-rows">
+
+                                @for (var i = 0; i < Model.LiteraturyUzupelniajace.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.TextBoxFor(model => model.LiteraturyUzupelniajace[i].Nazwa, new { @class = "form-control input-md full-width" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a class="add_row btn btn-default pull-left">Dodaj</a>
+                <a class="delete_row pull-right btn btn-default">Usuń</a>
+            </div>
+
+            <h2>Żródła dodatkowe</h2>
+
+            <div class="container" id="tabela3">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <div class="table-name" id="@Html.IdFor(model => model.ZrodlaDodatkowe)" name="@Html.NameFor(model => model.ZrodlaDodatkowe)"></div>
+                        <table class="table table-bordered table-hover" id="tab_logic">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        Tytuł
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="list-rows">
+
+                                @for (var i = 0; i < Model.ZrodlaDodatkowe.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.TextBoxFor(model => model.ZrodlaDodatkowe[i].Nazwa, new { @class = "form-control input-md full-width" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a class="add_row btn btn-default pull-left">Dodaj</a>
+                <a class="delete_row pull-right btn btn-default">Usuń</a>
+            </div>
+        </div>
+
+
+        <h1 id="metodyDydaktyczne" class="sectionHeader">Metody</h1>
+        <div id="metodyDydaktyczneDetails" class="col-md-12 slider closed">
+            <h2>Metody podające (asymilacji wiedzy)</h2>
+            <div class="container" id="tabela4">
+                    <div class="row clearfix">
+                        <div class="col-md-12 column">
+                            <div class="table-name" id="@Html.IdFor(model => model.MetodyPodajaceIds)" name="@Html.NameFor(model => model.MetodyPodajaceIds)"></div>
+                            <div class="shortcut hide">MP</div>
+
+                            <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                                @Html.DropDownList("MetodyPodajaceDropdown", Model.MetodyPodajace, new { @class = "form-control hide dropdown" })
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            #
+                                        </th>
+                                        <th class="text-center">
+                                            Tytuł
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list-rows">
+                                    @for (var i = 0; i < Model.MetodyPodajaceIds.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                MP@(i + 1)
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(m => Model.MetodyPodajaceIds[i], Model.MetodyPodajace.Select(mp => new SelectListItem()
+                                           {
+                                               Text = mp.Text,
+                                               Value = mp.Value,
+                                               Selected = mp.Value == Model.MetodyPodajaceIds[i].ToString()
+                                           }), new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a class="add_dropdown_row btn btn-default pull-left">Dodaj</a>
+                    <a class="delete_dropdown_row pull-right btn btn-default">Usuń</a>
+                </div>
+
+
+            <h2>Metody praktyczne</h2>
+            <div class="container">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <div class="table-name" id="@Html.IdFor(model => model.MetodyPraktyczneIds)" name="@Html.NameFor(model => model.MetodyPraktyczneIds)"></div>
+                        <div class="shortcut hide">MC</div>
+
+                        <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                            @Html.DropDownList("MetodyPraktyczneDropdown", Model.MetodyPraktyczne, new { @class = "form-control hide dropdown" })
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        #
+                                    </th>
+                                    <th class="text-center">
+                                        Tytuł
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="list-rows">
+                                @for (var i = 0; i < Model.MetodyPraktyczneIds.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            MC@(i + 1)
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => Model.MetodyPraktyczneIds[i], Model.MetodyPraktyczne.Select(mc => new SelectListItem()
+                                       {
+                                           Text = mc.Text,
+                                           Value = mc.Value,
+                                           Selected = mc.Value == Model.MetodyPraktyczneIds[i].ToString()
+                                       }), new { @class = "form-control" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a class="add_dropdown_row btn btn-default pull-left">Dodaj</a>
+                <a class="delete_dropdown_row pull-right btn btn-default">Usuń</a>
+            </div>
+
+
+            <h2>Metody problemowe (samodzielnego dochodzenia do wiedzy)</h2>
+            <div class="container">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <div class="table-name" id="@Html.IdFor(model => model.MetodyProblemoweIds)" name="@Html.NameFor(model => model.MetodyProblemoweIds)"></div>
+                        <div class="shortcut hide">MS</div>
+
+                        <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                            @Html.DropDownList("MetodyProblemoweDropdown", Model.MetodyProblemowe, new { @class = "form-control hide dropdown" })
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        #
+                                    </th>
+                                    <th class="text-center">
+                                        Tytuł
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="list-rows">
+                                @for (var i = 0; i < Model.MetodyProblemoweIds.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            MS@(i + 1)
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => Model.MetodyProblemoweIds[i], Model.MetodyProblemowe.Select(ms => new SelectListItem()
+                                       {
+                                           Text = ms.Text,
+                                           Value = ms.Value,
+                                           Selected = ms.Value == Model.MetodyProblemoweIds[i].ToString()
+                                       }), new { @class = "form-control" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a class="add_dropdown_row btn btn-default pull-left">Dodaj</a>
+                <a class="delete_dropdown_row pull-right btn btn-default">Usuń</a>
+            </div>
+
+
+
+            <h2>Metody eksponujące (waloryzujące)</h2>
+            <div class="container">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <div class="table-name" id="@Html.IdFor(model => model.MetodyEksponujaceIds)" name="@Html.NameFor(model => model.MetodyEksponujaceIds)"></div>
+                        <div class="shortcut hide">ME</div>
+
+                        <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                            @Html.DropDownList("MetodyEksponujaceDropdown", Model.MetodyEksponujace, new { @class = "form-control hide dropdown" })
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        #
+                                    </th>
+                                    <th class="text-center">
+                                        Tytuł
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="list-rows">
+                                @for (var i = 0; i < Model.MetodyEksponujaceIds.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            ME@(i + 1)
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => Model.MetodyEksponujaceIds[i], Model.MetodyEksponujace.Select(me => new SelectListItem()
+                                       {
+                                           Text = me.Text,
+                                           Value = me.Value,
+                                           Selected = me.Value == Model.MetodyEksponujaceIds[i].ToString()
+                                       }), new { @class = "form-control" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a class="add_dropdown_row btn btn-default pull-left">Dodaj</a>
+                <a class="delete_dropdown_row pull-right btn btn-default">Usuń</a>
+            </div>
+
+            <h2>Metody oceniania</h2>
+            <div class="container">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <div class="table-name" id="@Html.IdFor(model => model.MetodyOcenianiaIds)" name="@Html.NameFor(model => model.MetodyOcenianiaIds)"></div>
+                        <div class="shortcut hide">MO</div>
+                        <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                            @Html.DropDownList("MetodyOcenianiaDropdown", Model.MetodyOceniania, new { @class = "form-control hide dropdown" })
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        #
+                                    </th>
+                                    <th class="text-center">
+                                        Tytuł
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="list-rows">
+                                @for (var i = 0; i < Model.MetodyOcenianiaIds.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            MP@(i + 1)
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => Model.MetodyOcenianiaIds[i], Model.MetodyOceniania.Select(mp => new SelectListItem()
+                                       {
+                                           Text = mp.Text,
+                                           Value = mp.Value,
+                                           Selected = mp.Value == Model.MetodyOcenianiaIds[i].ToString()
+                                       }), new { @class = "form-control" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a class="add_dropdown_row btn btn-default pull-left">Dodaj</a>
+                <a class="delete_dropdown_row pull-right btn btn-default">Usuń</a>
+            </div>
+
+            <h2>Warunki zaliczenia</h2>
+            <div class="col-md-12">
+                @Html.TextAreaFor(m => m.WarunkiZaliczenia, new { @class = "form-control" })
+            </div>
+
+            <h2>Przykłady pytań zaliczeniowych</h2>
+            <div class="container" id="tabela6">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <div class="table-name" id="@Html.IdFor(model => model.Pytania)" name="@Html.NameFor(model => model.Pytania)"></div>
+                        <table class="table table-bordered table-hover" id="tab_logic">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        Opis
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="list-rows">
+
+                                @for (var i = 0; i < Model.Pytania.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.TextBoxFor(model => model.Pytania[i].Nazwa, new { @class = "form-control input-md full-width" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a class="add_row btn btn-default pull-left">Dodaj</a>
+                <a class="delete_row pull-right btn btn-default">Usuń</a>
+            </div>
+        </div>
+
+
+
+        <h1 id="tresci" class="sectionHeader">Tresci</h1>
+        <div id="tresciDetails" class="col-md-12 slider closed">
+            @for (var i = 0; i < Model.Godziny.Count; i++)
+            {
+                @Html.HiddenFor(m => Model.Godziny[i].TypLiczbaGodzinId)
+
+                <h2>@Html.Raw(Model.Godziny[i].Nazwa)</h2>
+                <div class="container">
+                    <div class="row clearfix">
+                        <div class="col-md-12 column">
+                            <div class="table-name" id="@Html.IdFor(model => Model.Godziny[i].Tresci)" name="@Html.NameFor(model => Model.Godziny[i].Tresci)"></div>
+                            <div class="shortcut hide">@Model.Godziny[i].Nazwa.First()</div>
+                            <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            #
+                                        </th>
+                                        <th class="text-center">
+                                            Tytuł
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list-rows">
+                                    @for (var j = 0; j < Model.Godziny[i].Tresci.Count; j++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Model.Godziny[i].Nazwa.First()@(j + 1)
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(model => Model.Godziny[i].Tresci[j].Nazwa, new { @class = "form-control input-md full-width" })
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a class="add_shortcut_row btn btn-default pull-left">Dodaj</a>
+                    <a class="delete_row pull-right btn btn-default">Usuń</a>
+                </div>
+            }
+        </div>
+
+
+        <h1 id="efektyKsztalcenia" class="sectionHeader">Efekty Kształcenia</h1>
+        <div id="efektyKsztalceniaDetails" class="col-md-12 slider closed">
+            <style type="text/css">
+                .tg {
+                    border-collapse: collapse;
+                    border-spacing: 0;
+                }
+
+                    .tg td {
+                        font-family: Arial, sans-serif;
+                        font-size: 14px;
+                        padding: 10px 5px;
+                        border-style: solid;
+                        border-width: 1px;
+                        overflow: hidden;
+                        word-break: normal;
+                        border-color: black;
+                    }
+
+                    .tg th {
+                        font-family: Arial, sans-serif;
+                        font-size: 14px;
+                        font-weight: normal;
+                        padding: 10px 5px;
+                        border-style: solid;
+                        border-width: 1px;
+                        overflow: hidden;
+                        word-break: normal;
+                        border-color: black;
+                    }
+
+                    .tg .tg-xldj {
+                        border-color: inherit;
+                        text-align: left
+                    }
+
+                    .tg .tg-0pky {
+                        border-color: inherit;
+                        text-align: left;
+                        vertical-align: top
+                    }
+
+                    .tg .tg-7414 {
+                        background-color: #3166ff;
+                        border-color: inherit;
+                        text-align: left
+                    }
+
+                    .tg .tg-tcj5 {
+                        background-color: #3166ff;
+                        border-color: inherit;
+                        text-align: left;
+                        vertical-align: top
+                    }
+            </style>
+            <table class="tg">
+                <tr>
+                    <th class="tg-xldj" colspan="2" rowspan="2">Obszarowe Efekty Kształcenia</th>
+                    <th class="tg-xldj" colspan="2" rowspan="2">Kierunkowe Efekty Kształcenia</th>
+                    <th class="tg-xldj" rowspan="2">Wymagania wstępne</th>
+                    <th class="tg-xldj" rowspan="2">Przedmiotowe Efekty Kształcenia</th>
+                    <th class="tg-xldj" colspan="7">Treści kształcenia</th>
+                    <th class="tg-0pky" rowspan="2">Metody dydaktyczne</th>
+                    <th class="tg-0pky" rowspan="2">Metody  oceniania</th>
+                    <th class="tg-0pky" rowspan="2">Treść</th>
+                </tr>
+                <tr>
+                    <td class="tg-xldj">W</td>
+                    <td class="tg-xldj">K</td>
+                    <td class="tg-xldj">Ć</td>
+                    <td class="tg-0pky">L</td>
+                    <td class="tg-0pky">P</td>
+                    <td class="tg-0pky">S</td>
+                    <td class="tg-0pky">P/O</td>
+                </tr>
+                <tr>
+                    <td class="tg-7414" colspan="16">WIEDZA</td>
+                </tr>
+                <tr>
+                    <td class="tg-xldj" rowspan="2">S1P_W01</td>
+                    <td class="tg-xldj" rowspan="2">ma podstawową wiedzę o charakterze nauk społecznych, ich miejscu w systemie nauk i relacjach do innych nauk</td>
+                    <td class="tg-xldj">K_W01</td>
+                    <td class="tg-xldj">ma podstawową wiedzę o istocie nauk o administracji</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-xldj">K_W02</td>
+                    <td class="tg-xldj">ma podstawową wiedzę o miejscu nauki o administracji w dziedzinie nauk prawnych oraz obszarze nauk społecznych</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-xldj" rowspan="2">S1P_W02</td>
+                    <td class="tg-xldj" rowspan="2">ma podstawową wiedzę o typowych rodzajach struktur i instytucji społecznych (kulturowych, politycznych, prawnych, ekonomicznych), w szczególności ich podstawowych elementach</td>
+                    <td class="tg-xldj">K_W03</td>
+                    <td class="tg-xldj">ma uporządkowaną wiedzę o różnych aspekatach życia społecznego a w szczególności funkcjonowania administracji publicznej</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-xldj">K_W04</td>
+                    <td class="tg-xldj">zna podstawowe elementy struktur administracji publicznej oraz sfery życia publicznego</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-xldj" rowspan="2">S1P_W03</td>
+                    <td class="tg-xldj" rowspan="2">ma podstawową wiedzę o relacjach między strukturami i instytucjami społecznymi i ich elementami</td>
+                    <td class="tg-xldj">K_W05</td>
+                    <td class="tg-xldj">ma podstawową wiedzę z zakresu organizacji i funkcjonowania administracji publicznej</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-xldj">K_W06</td>
+                    <td class="tg-xldj">ma podstawową wiedzą o porządku prawnym jako systemie oraz wzajemnych relacjach zachodzacych w tym systemie</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-xldj" rowspan="2">S1P_W04</td>
+                    <td class="tg-xldj" rowspan="2">zna rodzaje więzi społecznych w zakresie dziedzin nauki i dyscyplin naukowych, właściwych dla studiowanego kierunku studiów i rządzące nimi prawidłowości</td>
+                    <td class="tg-xldj">K_W07</td>
+                    <td class="tg-xldj">zna rodzaje relacji i stosunków zachodzących w administracji, w szczególnosci stosunków prawnych, organizacyjnych, ekonomicznych oraz społecznych</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-xldj">K_W08</td>
+                    <td class="tg-xldj">ma podstawową wiedzę o wzajemnych realacjach pomiędzy różnymi podmiotami wykonującymi zadania z zakresu administracji publicznej</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_W05</td>
+                    <td class="tg-0pky" rowspan="2">ma wiedzę o człowieku, w szczególności jako podmiocie konstytuującym struktury społeczne i zasady ich funkcjonowania, a także działającym w tych strukturach</td>
+                    <td class="tg-0pky">K_W09</td>
+                    <td class="tg-0pky">ma podstawową wiedzę o prawach i obowiązkach obywatelskich wynikających z przepisów Konstytucji, przepisów prawa międzynarodowego publicznego oraz przepisów prawa administracyjnego materialnego</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_W10</td>
+                    <td class="tg-0pky">ma wiedzę o miejscu i roli jednostki oraz grupy w administracji oraz strukturach państwa, a także instrumentach ich oddziaływania na instytucje publiczne</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_W06</td>
+                    <td class="tg-0pky" rowspan="2">ma wiedzę o metodach i narzędziach, w tym technikach pozyskiwania danych, odpowiednich dla dziedzin nauki i dyscyplin naukowych, właściwych dla studiowanego kierunku studiów, pozwalających opisywać struktury i instytucje społeczne oraz procesy w nich i między nimi zachodzące, ze szczególnym uwzględnieniem wybranych instytucji oraz organizacji społecznych lub gospodarczych</td>
+                    <td class="tg-0pky">K_W11</td>
+                    <td class="tg-0pky">posiada podstawową wiedzę z zakresu metodologii innych wybranych dyscyplin zaliczanych do obszaru nauk społecznych</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_W12</td>
+                    <td class="tg-0pky">posiada podstawową wiedzę z zakresu metodologii innych wybranych dyscyplin zaliczanych do obszaru nauk społecznych</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_W07</td>
+                    <td class="tg-0pky" rowspan="2">ma wiedzę o normach i regułach organizujących wybrane struktury i instytucje społeczne</td>
+                    <td class="tg-0pky">K_W13</td>
+                    <td class="tg-0pky">ma wiedzę w zakresie prawno-ustrojowych podstaw konstytuujących funkcjonowanie państwa, jego organów i instytucji ze szczególnym uwzględnieniem administracji publicznej</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_W14</td>
+                    <td class="tg-0pky">ma wiedzę o zasadach i regułach wewnętrznej organizacji administracji</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_W08</td>
+                    <td class="tg-0pky" rowspan="2">ma wiedzę o procesach zmian wybranych struktur i instytucji społecznych oraz ich elementów, o przyczynach, przebiegu, skali i konsekwencjach tych zmian</td>
+                    <td class="tg-0pky">K_W15</td>
+                    <td class="tg-0pky">posiada wiedzę o procesach zmian organizacji oraz zasad funkcjonowania struktur państwowych i administracji publicznej. Zna przyczyny, przebieg a także skutki realizacji tych procesów</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_W16</td>
+                    <td class="tg-0pky">zna genezę, przebieg i stutki zmian ustroju państw, organizacji i innych wybranych struktur politycznych w ujęciu historycznym</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_W09</td>
+                    <td class="tg-0pky">ma wiedzę o poglądach na temat wybranych struktur i instytucji społecznych oraz rodzajów więzi społecznych i ich historycznej ewolucji</td>
+                    <td class="tg-0pky">K_W17</td>
+                    <td class="tg-0pky">posiada wiedzę o podstawowych nurtach myśli polityczno-prawnej i społeczno-ekonomicznej, ze szczególnym uwzględnieniem  myśli administracyjnej, a także ich ewolucji oraz kontekstu historycznego</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_W10</td>
+                    <td class="tg-0pky">zna i rozumie podstawowe pojęcia i zasady z zakresu ochrony własności przemysłowej i prawa autorskiego</td>
+                    <td class="tg-0pky">K_W18</td>
+                    <td class="tg-0pky">posiada podstawową wiedzę z zakresu ochrony własności przemysłowej i prawa autorskiego oraz rolę administracji w tym zakresie</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_W11</td>
+                    <td class="tg-0pky">zna ogólne zasady tworzenia i rozwoju form indywidualnej przedsiębiorczości, wykorzystującej wiedzę z zakresu dziedzin nauki i dyscyplin naukowych, właściwych dla studiowanego kierunku studiów</td>
+                    <td class="tg-0pky">K_W19</td>
+                    <td class="tg-0pky">zna podstawowe zasady podejmowania i prowadzenia działalności gospodarczej</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky">U_W20</td>
+                    <td class="tg-0pky">posiada wiedzę zarówno z obszaru nauk humanistycznych i społecznych, jak i ekonomicznych oraz technicznych</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-tcj5" colspan="16">UMIEJĘTNOŚCI</td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_U01</td>
+                    <td class="tg-0pky">potrafi prawidłowo interpretować zjawiska społeczne (kulturowe, polityczne, prawne, ekonomiczne) specyficzne dla studiowanego kierunku studiów</td>
+                    <td class="tg-0pky">K_U01</td>
+                    <td class="tg-0pky">potrafi właściwie interpretować zachodzące zjawiska prawne, społeczne, ekonomiczne, polityczne i organizacyjne związane z administracją publiczną</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_U02</td>
+                    <td class="tg-0pky" rowspan="2">potrafi wykorzystać podstawową wiedzę teoretyczną do szczegółowego opisu i praktycznego analizowania jednostkowych procesów i zjawisk społecznych (kulturowych, politycznych, prawnych, gospodarczych) specyficznych dla studiowanego kierunku studiów</td>
+                    <td class="tg-0pky">K_U02</td>
+                    <td class="tg-0pky">umie wykorzystać posiadaną wiedzę teoretyczną do analizy i rozwiązania indywidualnego przypadku lub zjawiska występującego w administracji publicznej</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_U03</td>
+                    <td class="tg-0pky">umie dokonać oceny prawidłowości postępowania organu  administracji publicznej w konkretnej sprawie stosując kryteria ogólnie pojęte</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_U03</td>
+                    <td class="tg-0pky" rowspan="2">potrafi właściwie analizować przyczyny i przebieg wybranych procesów i zjawisk społecznych (kulturowych, politycznych, prawnych, gospodarczych) specyficzne dla dziedzin nauki i dyscyplin naukowych, właściwych dla studiowanego kierunku studiów</td>
+                    <td class="tg-0pky">K_U04</td>
+                    <td class="tg-0pky">potrafi właściwie analizować i interpretować przyczyny, przebieg oraz skutki podstawowych procesów związanych z administracją publiczną</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_U05</td>
+                    <td class="tg-0pky">potrafi samodzielnie dokonać prostej analizy tesktów prawnych</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_U04</td>
+                    <td class="tg-0pky">potrafi prognozować praktyczne skutki konkretnych procesów i zjawisk społecznych (kulturowych, politycznych, ekonomicznych) z wykorzystaniem standardowych metod i narzędzi właściwych dla dziedzin nauki i dyscyplin naukowych, właściwych dla studiowanego kierunku studiów</td>
+                    <td class="tg-0pky">K_U06</td>
+                    <td class="tg-0pky">potrafi podczas praktycznego rozwiązywania problemów w administracji wykorzystać podstawowe metody i narzędzia właściwe dla nauk prawnych oraz wybranych nauk społecznych</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_U05</td>
+                    <td class="tg-0pky" rowspan="2">prawidłowo posługuje się systemami normatywnymi oraz wybranymi normami i regułami (prawnymi, zawodowymi, etycznymi) w celu rozwiązania konkretnego zadania z zakresu dziedzin nauki i dyscyplin naukowych, właściwych dla studiowanego kierunku studiów</td>
+                    <td class="tg-0pky">K_U07</td>
+                    <td class="tg-0pky">umie stosować normy prawne w celu rozwiązania konkretnego zagadnienia z obszaru administracji publicznej</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_U08</td>
+                    <td class="tg-0pky">umie stosować normy etyki urzędniczej oraz zasady zawodowe urzędnika w celu rozwiązania konkretnego zagadnienia z obszaru administracji publicznej</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_U06</td>
+                    <td class="tg-0pky">posiada umiejętność wykorzystania zdobytej wiedzy, z uwzględnieniem umiejętności nabytych podczas praktyki zawodowej</td>
+                    <td class="tg-0pky">K_U09</td>
+                    <td class="tg-0pky">potrafi wykorzystać podstawową wiedzę teoretyczną  oraz praktyczną nabytą w toku studenckich praktyk zawodowych do działania na stanowisku administracyjnym w administracji publicznej</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_U07</td>
+                    <td class="tg-0pky" rowspan="2">posiada umiejętność analizy proponowanego rozwiązania konkretnych problemów i proponuje odpowiednie rozstrzygnięcia w tym zakresie, posiada umiejętność wdrażania proponowanych rozwiązań</td>
+                    <td class="tg-0pky">K_U10</td>
+                    <td class="tg-0pky">posiada umiejętność krytycznej analizy oraz wyboru optymalnego rozwiązania dla konkretnego problemu związanego z administracją publiczną</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_U11</td>
+                    <td class="tg-0pky">posiada zdolność skutecznej implementacji zaproponowanych rozwiązań w praktyce funkcjonowania administracji</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_U08</td>
+                    <td class="tg-0pky">posiada umiejętność rozumienia i analizowania zjawisk społecznych</td>
+                    <td class="tg-0pky">K_U12</td>
+                    <td class="tg-0pky">rozumie i potrafi analizować zjawiska społeczne związane z administracją i szeroko rozumianym życiem publicznym</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_U09</td>
+                    <td class="tg-0pky" rowspan="2">posiada umiejętność przygotowania typowych prac pisemnych w języku polskim i języku obcym, uznawanym za podstawowy dla dziedzin nauki i dyscyplin naukowych, właściwych dla studiowanego kierunku studiów, dotyczących zagadnień szczegółowych, z wykorzystaniem podstawowych ujęć teoretycznych, a także różnych źródeł</td>
+                    <td class="tg-0pky">K_U13</td>
+                    <td class="tg-0pky">potrafi przygotować się i  wypowiedzieć pisemnie w języku polskim w zakresie zagadnień związanych z administracją, w szczególności stosować formalny język prawny i prawniczy, z wykorzystaniem konstrukcji teoretycznych oraz stosownych źródeł</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_U14</td>
+                    <td class="tg-0pky">potrafi przygotować się i wypowiedzieć pisemnie w wybranym języku obcym w zakresie zagadnień związanych z administracją</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_U10</td>
+                    <td class="tg-0pky" rowspan="2">posiada umiejętność przygotowania wystąpień ustnych, w języku polskim i języku obcym, w zakresie dziedzin nauki i dyscyplin naukowych, właściwych dla studiowanego kierunku studiów, dotyczących zagadnień szczegółowych, z wykorzystaniem podstawowych ujęć teoretycznych, a także różnych źródeł</td>
+                    <td class="tg-0pky">K_U15</td>
+                    <td class="tg-0pky">potrafi przygotować się i wypowiedzieć ustnie w języku polskim w zakresie zagadnień związanych z administracją, w szczególności stosować język prawny i prawniczy, z wykorzystaniem konstrukcji teoretycznych oraz stosownych źródeł</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_U16</td>
+                    <td class="tg-0pky">potrafi przygotować się i wypowiedzieć ustnie w wybranym języku obcym w zakresie zagadnień związanych z administracją</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_U11</td>
+                    <td class="tg-0pky">ma umiejętności językowe w zakresie dziedzin nauki i dyscyplin naukowych, właściwych dla studiowanego kierunku studiów, zgodne z wymaganiami określonymi dla poziomu B2 Europejskiego Systemu Opisu Kształcenia Językowego</td>
+                    <td class="tg-0pky">K_U17</td>
+                    <td class="tg-0pky">ma umiejętności językowe w zakresie ogólnym oraz administracji zgodne z wymaganiami określonymi dla pozimou B2 Europejskiego Systemu Opisu Kształcenia Językowego</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky">U_U18</td>
+                    <td class="tg-0pky">potrafi przystosować się do dynamicznie zmieniającego się rynku pracy, dzięki posiadaniu wiedzy ogólnej i specjalistycznej</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-tcj5" colspan="16">KOMPETENCJE</td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_K01</td>
+                    <td class="tg-0pky">rozumie potrzebę uczenia się przez całe życie</td>
+                    <td class="tg-0pky">K_K01</td>
+                    <td class="tg-0pky">rozumie potrzebę uczenia się przez całe życie, dostrzega korzyści płynące z podwyższania kwalifikacji</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_K02</td>
+                    <td class="tg-0pky" rowspan="2">potrafi współdziałać i pracować w grupie, przyjmując w niej różne role</td>
+                    <td class="tg-0pky">K_K02</td>
+                    <td class="tg-0pky">potrafi współdziałać w pracy zespołowej, przyjmując różne role w grupie</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_K03</td>
+                    <td class="tg-0pky">potrafi kierować niewielkim zespołem pracowników</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_K03</td>
+                    <td class="tg-0pky">potrafi odpowiednio określić priorytety służące realizacji określonego przez siebie lub innych zadania</td>
+                    <td class="tg-0pky">K_K04</td>
+                    <td class="tg-0pky">potrafi wyznaczać priorytety działania organów administracji publicznej</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_K04</td>
+                    <td class="tg-0pky">prawidłowo identyfikuje i rozstrzyga dylematy związane z wykonywaniem zawodu</td>
+                    <td class="tg-0pky">K_K05</td>
+                    <td class="tg-0pky">prawidłowo identyfikuje i rozstrzyga problemy związane z efektywnym wykonywaniem zadań pracownika administracji publicznej</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky" rowspan="2">S1P_K05</td>
+                    <td class="tg-0pky" rowspan="2">umie uczestniczyć w przygotowaniu projektów społecznych (politycznych, gospodarczych, obywatelskich), uwzględniając aspekty prawne, ekonomiczne i polityczne</td>
+                    <td class="tg-0pky">K_K06</td>
+                    <td class="tg-0pky">potrafi aktywnie uczestniczyć w przygotowaniu projektów związanych z zakresem zadań administracji publicznej wraz z ich podstawą formalno-prawną</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">K_K07</td>
+                    <td class="tg-0pky">rozumie potrzebę pozyskiwania społecznej akceptacji dla działań władz publicznych, w tym również organów administracyjnych</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_K06</td>
+                    <td class="tg-0pky">potrafi uzupełniać i doskonalić nabytą wiedzę i umiejętności</td>
+                    <td class="tg-0pky">K_K08</td>
+                    <td class="tg-0pky">posiada zdolność samodzielnego uzupełniania i doskonalenia zdobytej wiedzy i umiejętności z obszaru nauk prawnych oraz wybranych nauk społecznych</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky">S1P_K07</td>
+                    <td class="tg-0pky">potrafi myśleć i działać w sposób przedsiębiorczy</td>
+                    <td class="tg-0pky">K_K09</td>
+                    <td class="tg-0pky">potrafi podejmować różnorodne działania na rzecz rozwoju społeczności loklanych  wykorzystując zdobytą  wiedzę z zakresu nauk o administracji i wybranych nauk z obszaru nauk społecznych</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky">U_K10</td>
+                    <td class="tg-0pky">rozumie potrzebę ustawicznego samorozwoju i wykorzystania w tym procesie nowoczesnych technologii charakteryzujących społeczeństwo informacyjne, z poszanowaniem praw własności intelektualnej</td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+            </table>
+        </div>
+
+        <h1 id="obciazenie" class="sectionHeader">Obciążenie pracą studenta</h1>
+        <div id="obciazenieDetails" class="col-md-12 slider closed">
+        <style type="text/css">
+            .tg {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+
+                .tg td {
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                    padding: 10px 5px;
+                    border-style: solid;
+                    border-width: 1px;
+                    overflow: hidden;
+                    word-break: normal;
+                    border-color: black;
+                }
+
+                .tg th {
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                    font-weight: normal;
+                    padding: 10px 5px;
+                    border-style: solid;
+                    border-width: 1px;
+                    overflow: hidden;
+                    word-break: normal;
+                    border-color: black;
+                }
+
+                .tg .tg-34fe {
+                    background-color: #c0c0c0;
+                    border-color: inherit;
+                    text-align: center;
+                    vertical-align: top
+                }
+
+                .tg .tg-9s09 {
+                    background-color: #9698ed;
+                    border-color: inherit;
+                    text-align: center
+                }
+
+                .tg .tg-llyw {
+                    background-color: #c0c0c0;
+                    border-color: inherit;
+                    text-align: left;
+                    vertical-align: top
+                }
+
+                .tg .tg-xldj {
+                    border-color: inherit;
+                    text-align: left
+                }
+
+                .tg .tg-mn4z {
+                    background-color: #c0c0c0;
+                    border-color: inherit;
+                    text-align: center
+                }
+
+                .tg .tg-bl0x {
+                    background-color: #c0c0c0;
+                    border-color: inherit;
+                    text-align: left
+                }
+
+                .tg .tg-0pky {
+                    border-color: inherit;
+                    text-align: left;
+                    vertical-align: top
+                }
+        </style>
+            <table class="tg">
+                <tr>
+                    <th class="tg-xldj" rowspan="2"></th>
+                    <th class="tg-9s09" colspan="8">Studia stacjonarne</th>
+                    <th class="tg-xldj" rowspan="25"></th>
+                    <th class="tg-9s09" colspan="8">Studia niestacjonarne</th>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z" colspan="8">Obciążenie pracą studenta (godziny)</td>
+                    <td class="tg-mn4z" colspan="8">Obciążenie pracą studenta (godziny)</td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Forma pracy studenta</td>
+                    <td class="tg-bl0x">W</td>
+                    <td class="tg-bl0x">K</td>
+                    <td class="tg-bl0x">Ć</td>
+                    <td class="tg-bl0x">L</td>
+                    <td class="tg-bl0x">P</td>
+                    <td class="tg-bl0x">S</td>
+                    <td class="tg-bl0x">P/O</td>
+                    <td class="tg-mn4z">Razem</td>
+                    <td class="tg-bl0x">W</td>
+                    <td class="tg-bl0x">K</td>
+                    <td class="tg-bl0x">Ć</td>
+                    <td class="tg-bl0x">L</td>
+                    <td class="tg-bl0x">P</td>
+                    <td class="tg-bl0x">S</td>
+                    <td class="tg-llyw">P/O</td>
+                    <td class="tg-34fe">Razem</td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Zajęcia z bezpośrednim udziałem nauczyciela</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Zapozanie się z literaturą przedmiotu</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Przygotowanie się do zajęć</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Przygotowanie się do kolokwiów</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Realizacja zadanych ćwiczeń i zadań</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Przygotowanie sprawozdania z ćwiczeń</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Przygotowanie projektu / pracy</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Przygotowanie się i udział w egzaminie</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Suma:</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-xldj" rowspan="3"></td>
+                    <td class="tg-xldj" colspan="8"></td>
+                    <td class="tg-xldj" colspan="8"></td>
+                </tr>
+                <tr>
+                    <td class="tg-9s09" colspan="8">Studia stacjonarne</td>
+                    <td class="tg-9s09" colspan="8">Studia niestacjonarne</td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z" colspan="8">Obciążenie pracą studenta (ECTS)</td>
+                    <td class="tg-mn4z" colspan="8">Obciążenie pracą studenta (ECTS)</td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Forma pracy studenta</td>
+                    <td class="tg-bl0x">W</td>
+                    <td class="tg-bl0x">K</td>
+                    <td class="tg-bl0x">Ć</td>
+                    <td class="tg-bl0x">L</td>
+                    <td class="tg-bl0x">P</td>
+                    <td class="tg-bl0x">S</td>
+                    <td class="tg-bl0x">P/O</td>
+                    <td class="tg-mn4z">Razem</td>
+                    <td class="tg-bl0x">W</td>
+                    <td class="tg-bl0x">K</td>
+                    <td class="tg-bl0x">Ć</td>
+                    <td class="tg-bl0x">L</td>
+                    <td class="tg-bl0x">P</td>
+                    <td class="tg-bl0x">S</td>
+                    <td class="tg-llyw">P/O</td>
+                    <td class="tg-34fe">Razem</td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Zajęcia z bezpośrednim udziałem nauczyciela</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Zapozanie się z literaturą przedmiotu</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Przygotowanie się do zajęć</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Przygotowanie się do kolokwiów</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Realizacja zadanych ćwiczeń i zadań</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Przygotowanie sprawozdania z ćwiczeń</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Przygotowanie projektu / pracy</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Przygotowanie się i udział w egzaminie</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+                <tr>
+                    <td class="tg-mn4z">Suma:</td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-xldj"></td>
+                    <td class="tg-0pky"></td>
+                    <td class="tg-0pky"></td>
+                </tr>
+            </table>
+        </div>
+
+
+
+
+
+            <p align="center"><button type="submit">Zapisz</button></p>
+            }
+        </div>
+
+        <script>
+            $('.sectionHeader').on("click", function () {
+                $('#' + this.id + "Details").toggleClass("closed");
+            })
+        </script>

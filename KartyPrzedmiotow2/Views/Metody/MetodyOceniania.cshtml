@@ -1,0 +1,41 @@
+﻿@model IEnumerable<KartyPrzedmiotow2.Models.MetodyOcenianiaListElement>
+
+@{
+    ViewBag.Title = "Metody Oceniania";
+}
+
+<h2>Metody Oceniania</h2>
+
+<p>
+    @Html.ActionLink("Dodaj metodę oceniania", "MetodyOcenianiaCreate", new { Id = ViewBag.Id }, htmlAttributes: new { @class = "btn btn-primary", @role = "button", @style = "margin:2px" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nazwa)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LiczbaProgramow)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nazwa)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LiczbaProgramow)
+        </td>
+        <td>
+            @*@Html.ActionLink("Edytuj", "Edit", new { id=item.Id }) |*@
+            @if (item.LiczbaProgramow == 0)
+            {
+                @Html.ActionLink("Usuń", "MetodyOcenianiaDelete", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-primary", @role = "button", @style = "margin:2px" })
+            }
+        </td>
+    </tr>
+}
+
+</table>

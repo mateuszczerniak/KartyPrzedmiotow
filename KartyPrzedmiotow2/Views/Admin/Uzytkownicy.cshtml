@@ -1,0 +1,55 @@
+﻿@model IEnumerable<KartyPrzedmiotow2.Models.UzytkownikListElement>
+
+@{
+    ViewBag.Title = "Użytkownicy";
+}
+
+<h2>Użytkownicy</h2>
+
+<p>
+    @Html.ActionLink("Dodaj użytkownika", "Register", "Account")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Imie)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nazwisko)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Tytuly)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Role)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Wydzialy)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Imie)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nazwisko)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Tytuly)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Role)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Wydzialy)
+        </td>
+        <td>
+            @Html.ActionLink("Edytuj", "UserEdit", new {  id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

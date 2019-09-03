@@ -1,0 +1,45 @@
+﻿@model IEnumerable<KartyPrzedmiotow2.Models.SpecjalnoscListElement>
+
+@{
+    ViewBag.Title = "Specjalności";
+}
+
+<h2>Specjalności</h2>
+
+<p>
+    @Html.ActionLink("Dodaj specjalność", "SpecjalnoscCreate", new { kierunekId = ViewBag.KierunekId }, htmlAttributes: new { @class = "btn btn-primary", @role = "button", @style = "margin:2px" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nazwa)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LiczbaProgramow)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nazwa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LiczbaProgramow)
+            </td>
+            <td>
+                @if (item.LiczbaProgramow == 0)
+                {
+                    <text>@Html.ActionLink("Usuń", "SpecjalnoscDelete", new { id = item.Id })</text>
+                }
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div>
+    @Html.ActionLink("Wróć", "Kierunki", new { id = ViewBag.WydzialId })
+</div>

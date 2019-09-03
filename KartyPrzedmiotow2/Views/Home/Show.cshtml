@@ -1,0 +1,405 @@
+﻿@model KartyPrzedmiotow2.Models.KartaDoWyswietlenia
+
+<style type="text/css">
+    .ectsWrong {
+        color: red;
+    }
+
+    .page-breaker {
+        display: block;
+        clear: both;
+        page-break-after: always;
+    }
+
+    .tg {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+        .tg td {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 10px 5px;
+            border-style: solid;
+            border-width: 1px;
+            overflow: visible;
+            word-break: normal;
+            border-color: black;
+        }
+
+        .tg th {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            padding: 10px 5px;
+            border-style: solid;
+            border-width: 1px;
+            overflow: visible;
+            word-break: normal;
+            border-color: black;
+        }
+</style>
+<div class="table-bordered">
+    <div class="row">
+        <div class="col-xs-6"><b>@Html.DisplayNameFor(model => model.NazwaPrzedmiotu)</b><text>: </text></div>
+        <div class="col-xs-6"><b>@Html.DisplayNameFor(model => model.NazwaPrzedmiotuAng)</b><text>: </text></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">@Html.DisplayFor(model => model.NazwaPrzedmiotu)</div>
+        <div class="col-xs-6">@Html.DisplayFor(model => model.NazwaPrzedmiotuAng)</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-10"><b>@Html.DisplayNameFor(model => model.Wydzial)</b><text>: </text></div>
+        <div class="col-xs-2"><b>@Html.DisplayNameFor(model => model.Rok)</b><text>: </text></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-10">@Html.DisplayFor(model => model.Wydzial)</div>
+        <div class="col-xs-2">@Html.DisplayFor(model => model.Rok)</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2"><b>@Html.DisplayNameFor(model => model.Kierunek)</b><text>: </text></div>
+        <div class="col-xs-2"><b>@Html.DisplayNameFor(model => model.Poziom)</b><text>: </text></div>
+        <div class="col-xs-2"><b>@Html.DisplayNameFor(model => model.Profil)</b><text>: </text></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2"><b>@Html.DisplayNameFor(model => model.GrupaPrzedmiotow)</b><text>: </text></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">@Html.DisplayFor(model => model.Kierunek)</div>
+        <div class="col-xs-2">@Html.DisplayFor(model => model.Poziom)</div>
+        <div class="col-xs-2">@Html.DisplayFor(model => model.Profil)</div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2">@Html.DisplayFor(model => model.GrupaPrzedmiotow)</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2"><b>@Html.DisplayNameFor(model => model.Semestr)</b><text>: </text></div>
+        <div class="col-xs-2"><b>@Html.DisplayNameFor(model => model.FormaZaliczenia)</b><text>: </text></div>
+        <div class="col-xs-2"><b>@Html.DisplayNameFor(model => model.PunktyECTS)</b><text>: </text></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2"><b>@Html.DisplayNameFor(model => model.PrzedmiotDoWyboru)</b><text>: </text></div>
+        <div class="col-xs-2"><b>@Html.DisplayNameFor(model => model.JezykZajec)</b><text>: </text></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">@Html.DisplayFor(model => model.Semestr)</div>
+        <div class="col-xs-2">@Html.DisplayFor(model => model.FormaZaliczenia)</div>
+        <div class="col-xs-2">@Html.DisplayFor(model => model.PunktyECTS)</div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2">@Html.DisplayFor(model => model.PrzedmiotDoWyboru)</div>
+        <div class="col-xs-2">@Html.DisplayFor(model => model.JezykZajec)</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12"><b>Forma zajęć i liczba godzin na studiach stacjonarnych i niestacjonarnych</b>:</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">@Html.DisplayFor(model => model.Godziny)</div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12"><b>@Html.DisplayNameFor(model => model.Specjalnosc)</b><text>: </text></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">@Html.DisplayFor(model => model.Specjalnosc)</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12"><b>@Html.DisplayNameFor(model => model.Prowadzacy)</b><text>: </text></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">@Html.DisplayFor(model => model.Prowadzacy)</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12"><b>@Html.DisplayNameFor(model => model.OpisPrzedmiotu)</b><text>: </text></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">@Html.DisplayFor(model => model.OpisPrzedmiotu)</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12"><b>Cele dydaktyczne: </b></div>
+    </div>
+    <div>
+        <div class="col-xs-12">-@Html.DisplayFor(model => model.CelGlowny)</div>
+        <div class="col-xs-12">-@Html.DisplayFor(model => model.CelWiedza)</div>
+        <div class="col-xs-12">-@Html.DisplayFor(model => model.CelUmiejetnosci)</div>
+        <div class="col-xs-12">-@Html.DisplayFor(model => model.CelKompetencje)</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6"><b>Metody dydaktyczne: </b></div>
+        <div class="col-xs-6"><b>Metody oceniania: </b></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">@Html.DisplayFor(model => model.MetodyDydaktyczne)</div>
+        <div class="col-xs-6">@Html.DisplayFor(model => model.MetodyOceniania)</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12"><b>Treści kształcenia</b></div>
+    </div>
+    <div class="col-xs-12">
+        @Html.DisplayFor(model => model.Tresci)
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <b>Literatura: </b>
+        </div>
+    </div>
+    <div>
+        @Html.DisplayFor(model => model.Literatura)
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <b>Warunki zaliczenia: </b>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        @Html.DisplayFor(model => model.WarunkiZaliczenia)
+    </div>
+    <div>
+        <b>Przykłady pytań zaliczeniowych: </b>
+    </div>
+    <div class="page-breaker">
+        @Html.DisplayFor(model => model.Pytania)
+    </div>
+    @* tabele *@
+    <div class="container center-block">
+        <div align="center" style="margin-top: 30px"><b>Obciążenie pracą studenta</b></div>
+        <div align="center" style="margin-top:20px">Studia stacjonarne</div>
+        <table class="tg" align="center" style="margin-bottom: 30px;">
+            <thead>
+                <tr>
+                    <td>
+                        Forma pracy studenta
+                    </td>
+                    @foreach (var godzina in Model.FormaPracyStacjonarne.First().Godziny.OrderBy(g => g.TypLiczbaGodzinId))
+                    {
+                        <td colspan="2">
+                            @Html.Raw(godzina.Nazwa)
+                        </td>
+                    }
+                    <td colspan="2">
+                        Suma
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Zajęcia z bezpośrednim udziałem nauczyciela</td>
+                    @foreach (var godzina in Model.Godziny.OrderBy(g => g.TypLiczbaGodzinId))
+                    {
+                        <td>
+                            @Html.Raw(godzina.Stacjonarne) g
+                        </td>
+                        <td>
+                            @*@Html.Raw(string.Format("{0:0.0}", godzina.Stacjonarne / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", godzina.Stacjonarne / 25.0)) ECTS
+                        </td>
+                    }
+                    @{
+                        var sumStacjonarne = Model.Godziny.Sum(g => g.Stacjonarne);
+                        <td>
+                            @Html.Raw(sumStacjonarne) g
+                        </td>
+                        <td>
+                            @*@Html.Raw(string.Format("{0:0.0}", sumStacjonarne / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", sumStacjonarne / 25.0)) ECTS
+                        </td>
+                    }
+                </tr>
+                @foreach (var formaPracy in Model.FormaPracyStacjonarne)
+                {
+                    <tr>
+                        <td>
+                            @Html.Raw(formaPracy.Nazwa)
+                        </td>
+                        @foreach (var godzina in formaPracy.Godziny.OrderBy(g => g.TypLiczbaGodzinId))
+                        {
+                            <td>
+                                @Html.Raw(godzina.Godzin) g
+                            </td>
+                            <td>
+                                @*@Html.Raw(string.Format("{0:0.0}", godzina.Godzin / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", godzina.Godzin / 25.0)) ECTS
+                            </td>
+                        }
+                        @{
+                            var sum = formaPracy.Godziny.Select(g => g.Godzin).Sum();
+                        }
+                        <td>
+                            @Html.Raw(sum) g
+                        </td>
+                        <td>
+                            @*@Html.Raw(string.Format("{0:0.0}", sum / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", sum / 25.0)) ECTS
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td></td>
+                    @{
+                        var duzaSumaStacjonarne = 0;
+                    }
+                    @foreach (var godzina in Model.Godziny.OrderBy(g => g.TypLiczbaGodzinId))
+                    {
+                        var malaSumaStacjonarne = Model.FormaPracyStacjonarne.SelectMany(pz => pz.Godziny).Where(g => g.TypLiczbaGodzinId == godzina.TypLiczbaGodzinId && g.Nazwa == godzina.Typ).Sum(lg => lg.Godzin) + godzina.Stacjonarne;
+                        duzaSumaStacjonarne += malaSumaStacjonarne;
+                        <td>
+                            @Html.Raw(malaSumaStacjonarne) g
+                        </td>
+                        <td>
+                            @*@Html.Raw(string.Format("{0:0.0}", malaSumaStacjonarne / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", malaSumaStacjonarne / 25.0)) ECTS
+                        </td>
+                    }
+                    <td>
+                        @Html.Raw(duzaSumaStacjonarne) g
+                    </td>
+                    <td>
+                        @*@Html.Raw(string.Format("{0:0.0}", duzaSumaStacjonarne / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", duzaSumaStacjonarne / 25.0)) ECTS
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        @{
+            var ectsSieZgadzaStacjonarne = duzaSumaStacjonarne / 25.0 == Model.PunktyECTS;
+        }
+        <div align="center" class="@Html.Raw(ectsSieZgadzaStacjonarne ? "ectsOK":"ectsWrong")">Wyliczone punkty ECTS - @Html.Raw(duzaSumaStacjonarne / 25.0)</div>
+        <div align="center" style="margin-bottom: 30px">Przypisane punkty ECTS - @Html.Raw(Model.PunktyECTS)</div>
+
+        <div align="center" style="margin-top:20px">Studia stacjonarne</div>
+        <table class="tg" align="center" style="margin-bottom: 30px;">
+            <thead>
+                <tr>
+                    <td>
+                        Forma pracy studenta
+                    </td>
+                    @foreach (var godzina in Model.FormaPracyZaoczne.First().Godziny.OrderBy(g => g.TypLiczbaGodzinId))
+                    {
+                        <td colspan="2">
+                            @Html.Raw(godzina.Nazwa)
+                        </td>
+                    }
+                    <td colspan="2">
+                        Suma
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Zajęcia z bezpośrednim udziałem nauczyciela</td>
+                    @foreach (var godzina in Model.Godziny.OrderBy(g => g.TypLiczbaGodzinId))
+                    {
+                        <td>
+                            @Html.Raw(godzina.Niestacjonarne) g
+                        </td>
+                        <td>
+                            @*@Html.Raw(string.Format("{0:0.0}", godzina.Niestacjonarne / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", godzina.Niestacjonarne / 25.0)) ECTS
+                        </td>
+                    }
+                    @{
+                        var sumNiestacjonarne = Model.Godziny.Sum(g => g.Niestacjonarne);
+                        <td>
+                            @Html.Raw(sumNiestacjonarne) g
+                        </td>
+                        <td>
+                            @*@Html.Raw(string.Format("{0:0.0}", sumNiestacjonarne / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", sumNiestacjonarne / 25.0)) ECTS
+                        </td>
+                    }
+                </tr>
+                @foreach (var formaPracy in Model.FormaPracyZaoczne)
+                {
+                    <tr>
+                        <td>
+                            @Html.Raw(formaPracy.Nazwa)
+                        </td>
+                        @foreach (var godzina in formaPracy.Godziny.OrderBy(g => g.TypLiczbaGodzinId))
+                        {
+                            <td>
+                                @Html.Raw(godzina.Godzin) g
+                            </td>
+                            <td>
+                                @*@Html.Raw(string.Format("{0:0.0}", godzina.Godzin / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", godzina.Godzin / 25.0)) ECTS
+                            </td>
+                        }
+                        @{
+                            var sum = formaPracy.Godziny.Select(g => g.Godzin).Sum();
+                        }
+                        <td>
+                            @Html.Raw(sum) g
+                        </td>
+                        <td>
+                            @*@Html.Raw(string.Format("{0:0.0}", sum / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", sum / 25.0)) ECTS
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td></td>
+                    @{
+                        var duzaSumaNiestacjonarne = 0;
+                    }
+                    @foreach (var godzina in Model.Godziny.OrderBy(g => g.TypLiczbaGodzinId))
+                    {
+                        var malaSumaNiestacjonarne = Model.FormaPracyZaoczne.SelectMany(pz => pz.Godziny).Where(g => g.TypLiczbaGodzinId == godzina.TypLiczbaGodzinId && g.Nazwa == godzina.Typ).Sum(lg => lg.Godzin) + godzina.Niestacjonarne;
+                        duzaSumaNiestacjonarne += malaSumaNiestacjonarne;
+                        <td>
+                            @Html.Raw(malaSumaNiestacjonarne) g
+                        </td>
+                        <td>
+                            @*@Html.Raw(string.Format("{0:0.0}", malaSumaNiestacjonarne / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", malaSumaNiestacjonarne / 25.0)) ECTS
+                        </td>
+                    }
+                    <td>
+                        @Html.Raw(duzaSumaNiestacjonarne) g
+                    </td>
+                    <td>
+                        @*@Html.Raw(string.Format("{0:0.0}", duzaSumaNiestacjonarne / 30.0)) -*@ @Html.Raw(string.Format("{0:0.0}", duzaSumaNiestacjonarne / 25.0)) ECTS
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        @{
+            var ectsSieZgadzaNiestacjonarne = duzaSumaNiestacjonarne / 25.0 == Model.PunktyECTS;
+        }
+        <div align="center" class="@Html.Raw(ectsSieZgadzaNiestacjonarne ? "ectsOK":"ectsWrong")">Wyliczone punkty ECTS - @Html.Raw(duzaSumaNiestacjonarne / 25.0)</div>
+        <div align="center" style="margin-bottom: 30px">Przypisane punkty ECTS - @Html.Raw(Model.PunktyECTS)</div>
+
+        <div class="page-breaker"></div>
+
+
+        <div align="center"><b>Efekty kształcenia</b></div>
+        <table class="tg" align="center" style="margin-bottom: 10px;">
+            <thead>
+                <tr>
+                    <td>
+                        Efekty kształcenia
+                    </td>
+                    @*<td>
+                            Przedmiotowe efekty kształcenia
+                        </td>*@
+                    <td>
+                        Treści kształcenia
+                    </td>
+                    <td>
+                        Metody dydaktyczne
+                    </td>
+                    <td>
+                        Metody oceniania
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var efekt in Model.Efekty)
+                {
+                    <tr>
+                        <td>@Html.Raw(efekt.Opis)</td>
+                        @*<td>@Html.Raw(efekt.PrzedmiotoweEfektyKsztalcenia)</td>*@
+                        <td>@Html.Raw(string.Join(", ", efekt.Tresci))</td>
+                        <td>@Html.Raw(string.Join(", ", efekt.MetodyDydaktyczne))</td>
+                        <td>@Html.Raw(string.Join(", ", efekt.MetodyOceniania))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (!Model.PDF)
+{
+    @Html.ActionLink("Zapisz PDF", "ShowPDF", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary", @role = "button", @style = "margin:2px" })
+}

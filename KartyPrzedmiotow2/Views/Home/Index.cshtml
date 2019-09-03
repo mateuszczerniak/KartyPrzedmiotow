@@ -1,0 +1,107 @@
+﻿@model IEnumerable<KartyPrzedmiotow2.Models.Program>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+<h2>Lista kart przedmiotów</h2>
+@if (User.IsInRole("Dziekan") || User.IsInRole("Biuro"))
+{
+<p>
+    @Html.ActionLink("Nowa Karta", "NowaKarta", null, htmlAttributes: new { @class = "btn btn-primary", @role = "button", @style = "margin:2px" })
+</p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nazwa)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Kod)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Wydzial)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Kierunek)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Semestr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrzedmiotDoWyboru)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Wykladowca)
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <th>
+                @Html.DisplayFor(model => item.Nazwa)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.Kod)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.Wydzial.Nazwa)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.Kierunek.Nazwa)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.Semestr.Nazwa)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.PrzedmiotDoWyboru)
+            </th>
+            <th>
+                @foreach (var tytul in item.Wykladowca.Tytuly.OrderBy(t => t.Kolejnosc))
+                {
+                    @Html.DisplayFor(model => tytul.Nazwa)<text> </text>
+                }
+
+                @Html.DisplayFor(model => item.Wykladowca.Imie)
+                @Html.DisplayFor(model => item.Wykladowca.Nazwisko)
+            </th>
+            <th>
+                <div>
+                    <div style="padding-left:20px;">
+                        @if (ViewBag.Dziekan == true || ViewBag.Biuro == true)
+                        {
+                            <text>
+                                @Html.ActionLink("Wyświetl", "Show", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-primary", @role = "button", @style = "margin:2px" })
+                                @Html.ActionLink("Edytuj", "EdytujKarta", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-primary", @role = "button", @style = "margin:2px" })
+                                @Html.ActionLink("Usuń", "Delete", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-danger btn-delete", @role = "button", @style = "margin:2px" })
+                            </text>
+                        }
+                        @if (User.IsInRole("Dziekan") || User.IsInRole("Wykładowca"))
+                        {
+                            <text>
+                                @Html.ActionLink("Uzupełnij", "Wypelnij", "Karta", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-success", @role = "button", @style = "margin:2px" })
+                            </text>
+                        }
+
+                    </div>
+                </div>
+            </th>
+        </tr>
+    }
+
+</table>
+
+<script>
+    $(document).on('click', '.btn-delete', function (e) {
+        var usun = confirm("Czy na pewno chcesz usunąć tę karte?");
+        if (!usun) {
+            e.preventDefault();
+        }
+    });
+</script>

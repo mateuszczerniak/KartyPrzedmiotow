@@ -1,0 +1,864 @@
+﻿@model KartyPrzedmiotow2.Models.Karta
+@{
+    ViewBag.Title = "Karta";
+}
+
+<style>
+    :invalid {
+        border-color: red;
+    }
+
+    .slider {
+        transition-property: all;
+        transition-duration: 1s;
+        transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+    }
+
+        .slider.closed {
+            display: none;
+        }
+
+    .full-width {
+        width: 100%;
+    }
+
+    .table-name {
+        display: none;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .sectionHeader {
+        font-size: 30px;
+    }
+
+    .btn-primary {
+        font-size: 30px;
+    }
+</style>
+
+<div class="jumbotron">
+    <h1>Karty Przedmiotów</h1>
+    <p class="lead">Wypełnij kartę przedmiotu</p>
+</div>
+<form id="wypelnijForm">
+    <div class="row align-items-center">
+        <p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#opis" aria-expanded="false" aria-controls="opis">
+                Opis
+            </button>
+        </p>
+        <div class="collapse" id="opis">
+            <div class="card card-body">
+                <h2>Informacje</h2>
+                <div class="form-group row">
+                    <label for="nazwaAng" class="col-xs-4 col-form-label">Nazwa w języku angielskim</label>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" data-bind="textInput: NazwaAngielski" required="required" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="jezyk" class="col-xs-4 col-form-label">Język prowadzenia zajęć</label>
+                    <div class="col-xs-8">
+                        <select class="form-control"
+                                data-bind="options: Jezyki,
+                       optionsText: 'Text',
+                       optionsValue: 'Value',
+                       value: JezykiId"></select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="materialy" class="col-xs-4 col-form-label">Materiały dla studentów</label>
+                    <div class="col-xs-8">
+                        <select class="form-control"
+                                data-bind="options: Materialy,
+                       optionsText: 'Text',
+                       optionsValue: 'Value',
+                       value: MaterialyId"></select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="wykladowca" class="col-xs-4 col-form-label">Wykładowca</label>
+                    <div class="col-xs-8">
+                        @Html.DisplayFor(m => m.Tytuly) @Html.DisplayFor(m => m.Imie) @Html.DisplayFor(m => m.Nazwisko)
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="rok" class="col-xs-4 col-form-label">Rok akademicki</label>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" data-bind="textInput: Rok" required="required" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="opis" class="col-xs-4 col-form-label">Krótki opis</label>
+                    <div class="col-xs-8">
+                        <textarea required="required" class="form-control" data-bind="textInput: KrotkiOpis" style="max-width:100%; min-height: 200px;"></textarea>
+                    </div>
+                </div>
+                <h2>Cele dydaktyczne</h2>
+                <div class="form-group row">
+                    <label for="opis" class="col-xs-4 col-form-label">Główny</label>
+                    <div class="col-xs-8">
+                        <textarea class="form-control" data-bind="textInput: CelGlowny" style="max-width:100%; min-height: 100px;" required="required"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="opis" class="col-xs-4 col-form-label">Szczegółowy w zakresie wiedzy</label>
+                    <div class="col-xs-8">
+                        <textarea class="form-control" data-bind="textInput: CelWiedza" style="max-width:100%; min-height: 100px;" required="required"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="opis" class="col-xs-4 col-form-label">Szczegółowy w zakresie umiejętności</label>
+                    <div class="col-xs-8">
+                        <textarea class="form-control" data-bind="textInput: CelUmiejetnosci" style="max-width:100%; min-height: 100px;" required="required"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="opis" class="col-xs-4 col-form-label">Szczegółowy w zakresie kompetencji</label>
+                    <div class="col-xs-8">
+                        <textarea class="form-control" data-bind="textInput: CelKompetencje" style="max-width:100%; min-height: 100px;" required="required"></textarea>
+                    </div>
+                </div>
+                <h2>Literatura podstawowa</h2>
+
+                <div class="container">
+                    <div class="row clearfix">
+                        <div class="col-xs-12 column">
+                            <table class="table table-bordered table-hover" id="tab_logic">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="text-center">
+                                            Tytuł
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list-rows" data-bind="foreach: LiteraturyPodstawowe">
+                                    <tr>
+                                        <td class="col-xs-10">
+                                            <input type="text" class="form-control input-md" data-bind="textInput: Nazwa" style="max-width:100%;" />
+                                        </td>
+                                        <td class="col-xs-2">
+                                            <a class="delete_row pull-right btn btn-default" data-bind="click: $root.usunLiteraturyPodstawowe">Usuń</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a class="btn btn-default pull-left" data-bind="click: dodajLiteraturyPodstawowe">Dodaj</a>
+                </div>
+
+
+
+
+                <h2>Literatura uzupełniająca</h2>
+
+                <div class="container">
+                    <div class="row clearfix">
+                        <div class="col-md-12 column">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="text-center">
+                                            Tytuł
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list-rows" data-bind="foreach: LiteraturyUzupelniajace">
+                                    <tr>
+                                        <td class="col-xs-10">
+                                            <input type="text" class="form-control input-md" data-bind="textInput: Nazwa" style="max-width:100%;" />
+                                        </td>
+                                        <td class="col-xs-2">
+                                            <a class="delete_row pull-right btn btn-default" data-bind="click: $root.usunLiteraturyUzupelniajace">Usuń</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a class="btn btn-default pull-left" data-bind="click: dodajLiteraturyUzupelniajace">Dodaj</a>
+                </div>
+
+                <h2>Żródła dodatkowe</h2>
+
+                <div class="container" id="tabela3">
+                    <div class="row clearfix">
+                        <div class="col-md-12 column">
+                            <table class="table table-bordered table-hover" id="tab_logic">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="text-center">
+                                            Tytuł
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list-rows" data-bind="foreach: ZrodlaDodatkowe">
+                                    <tr>
+                                        <td class="col-xs-10">
+                                            <input type="text" class="form-control input-md" data-bind="textInput: Nazwa" style="max-width:100%;" />
+                                        </td>
+                                        <td class="col-xs-2">
+                                            <a class="delete_row pull-right btn btn-default" data-bind="click: $root.usunZrodlaDodatkowe">Usuń</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a class="btn btn-default pull-left" data-bind="click: dodajZrodlaDodatkowe">Dodaj</a>
+                </div>
+            </div>
+        </div>
+        @* koniec testu *@
+
+        <p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" style="margin-top:15px;" data-target="#metody" aria-expanded="false" aria-controls="metody">
+                Metody
+            </button>
+        </p>
+        <div class="collapse" id="metody">
+            <div class="card card-body">
+                <h2>Metody podające (asymilacji wiedzy)</h2>
+                <div class="container" id="tabela4">
+                    <div class="row clearfix">
+                        <div class="col-xs-12 column">
+                            <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            #
+                                        </th>
+                                        <th colspan="2" class="text-center">
+                                            Tytuł
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list-rows sortable" data-bind="foreach: MetodyPodajaceIds">
+                                    <tr>
+                                        <td data-bind="html: 'MP'+Skrot()"> </td>
+                                        <td>
+                                            <select class="form-control"
+                                                    style="max-width:100%"
+                                                    data-bind="options: $root.MetodyPodajace,
+                                            optionsText: 'Text',
+                                            optionsValue: 'Value',
+                                            value: MetodaId"></select>
+                                        </td>
+                                        <td>
+                                            <a class="delete_row pull-right btn btn-default" data-bind="click: $root.usunMetodyPodajaceIds">Usuń</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a class="btn btn-default pull-left" data-bind="click: dodajMetodyPodajaceIds">Dodaj</a>
+                </div>
+
+
+                <h2>Metody praktyczne</h2>
+                <div class="container">
+                    <div class="row clearfix">
+                        <div class="col-xs-12 column">
+                            <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            #
+                                        </th>
+                                        <th colspan="2" class="text-center">
+                                            Tytuł
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list-rows sortable" data-bind="foreach: MetodyPraktyczneIds">
+                                    <tr>
+                                        <td data-bind="html: 'MC'+Skrot()"> </td>
+                                        <td>
+                                            <select class="form-control"
+                                                    style="max-width:100%"
+                                                    data-bind="options: $root.MetodyPraktyczne,
+                                            optionsText: 'Text',
+                                            optionsValue: 'Value',
+                                            value: MetodaId"></select>
+                                        </td>
+                                        <td>
+                                            <a class="delete_row pull-right btn btn-default" data-bind="click: $root.usunMetodyPraktyczneIds">Usuń</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a class="btn btn-default pull-left" data-bind="click: dodajMetodyPraktyczneIds">Dodaj</a>
+                </div>
+
+
+                <h2>Metody problemowe (samodzielnego dochodzenia do wiedzy)</h2>
+                <div class="container">
+                    <div class="row clearfix">
+                        <div class="col-xs-12 column">
+                            <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            #
+                                        </th>
+                                        <th colspan="2" class="text-center">
+                                            Tytuł
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list-rows sortable" data-bind="foreach: MetodyProblemoweIds">
+                                    <tr>
+                                        <td data-bind="html: 'MS'+Skrot()"> </td>
+                                        <td>
+                                            <select class="form-control"
+                                                    style="max-width:100%"
+                                                    data-bind="options: $root.MetodyProblemowe,
+                                            optionsText: 'Text',
+                                            optionsValue: 'Value',
+                                            value: MetodaId"></select>
+                                        </td>
+                                        <td>
+                                            <a class="delete_row pull-right btn btn-default" data-bind="click: $root.usunMetodyProblemoweIds">Usuń</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a class="btn btn-default pull-left" data-bind="click: dodajMetodyProblemoweIds">Dodaj</a>
+                </div>
+
+
+
+                <h2>Metody eksponujące (waloryzujące)</h2>
+                <div class="container">
+                    <div class="row clearfix">
+                        <div class="col-xs-12 column">
+                            <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            #
+                                        </th>
+                                        <th colspan="2" class="text-center">
+                                            Tytuł
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list-rows sortable" data-bind="foreach: MetodyEksponujaceIds">
+                                    <tr>
+                                        <td data-bind="html: 'ME'+Skrot()"> </td>
+                                        <td>
+                                            <select class="form-control"
+                                                    style="max-width:100%"
+                                                    data-bind="options: $root.MetodyEksponujace,
+                                            optionsText: 'Text',
+                                            optionsValue: 'Value',
+                                            value: MetodaId"></select>
+                                        </td>
+                                        <td>
+                                            <a class="delete_row pull-right btn btn-default" data-bind="click: $root.usunMetodyEksponujaceIds">Usuń</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a class="btn btn-default pull-left" data-bind="click: dodajMetodyEksponujaceIds">Dodaj</a>
+                </div>
+
+                <h2>Metody oceniania</h2>
+                <div class="container">
+                    <div class="row clearfix">
+                        <div class="col-xs-12 column">
+                            <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            #
+                                        </th>
+                                        <th colspan="2" class="text-center">
+                                            Tytuł
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list-rows sortable" data-bind="foreach: MetodyOcenianiaIds">
+                                    <tr>
+                                        <td data-bind="html: 'MO'+Skrot()"> </td>
+                                        <td>
+                                            <select class="form-control"
+                                                    style="max-width:100%"
+                                                    data-bind="options: $root.MetodyOceniania,
+                                            optionsText: 'Text',
+                                            optionsValue: 'Value',
+                                            value: MetodaId"></select>
+                                        </td>
+                                        <td>
+                                            <a class="delete_row pull-right btn btn-default" data-bind="click: $root.usunMetodyOcenianiaIds">Usuń</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a class="btn btn-default pull-left" data-bind="click: dodajMetodyOcenianiaIds">Dodaj</a>
+                </div>
+
+                <h2>Warunki zaliczenia</h2>
+                <div class="col-xs-12">
+                    <textarea class="form-control" data-bind="textInput: WarunkiZaliczenia" style="max-width:100%; min-height:100px;"></textarea>
+                </div>
+
+                <h2>Przykłady pytań zaliczeniowych</h2>
+                <div class="container">
+                    <div class="row clearfix">
+                        <div class="col-xs-12 column">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="text-center">
+                                            Tytuł
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list-rows" data-bind="foreach: Pytania">
+                                    <tr>
+                                        <td class="col-xs-10">
+                                            <input type="text" class="form-control input-md" data-bind="textInput: Nazwa" style="max-width:100%" />
+                                        </td>
+                                        <td class="col-xs-2">
+                                            <a class="delete_row pull-right btn btn-default" data-bind="click: $root.usunPytania">Usuń</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a class="btn btn-default pull-left" data-bind="click: dodajPytania">Dodaj</a>
+                </div>
+            </div>
+        </div>
+
+
+        <p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" style="margin-top:15px;" data-target="#tresci" aria-expanded="false" aria-controls="tresci">
+                Treści
+            </button>
+        </p>
+        <div class="collapse" id="tresci">
+            <div class="card card-body">
+                <div id="tresciDetails" class="col-md-12" data-bind="foreach: Godziny">
+                    <h2 data-bind="html: Nazwa"></h2>
+                    <div class="container">
+                        <div class="row clearfix">
+                            <div class="col-xs-12 column">
+                                <table class="table table-bordered table-hover table-dropdown" id="tab_logic">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                #
+                                            </th>
+                                            <th colspan="2" class="text-center">
+                                                Tytuł
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="list-rows sortable" data-bind="foreach: Tresci">
+                                        <tr class="ui-sortable-handle">
+                                            <td class="col-xs-1" data-bind="html: $parent.krotkaNazwa()+Skrot()"></td>
+                                            <td class="col-xs-10">
+                                                <input type="text" class="form-control input-md full-width" data-bind="textInput: Nazwa" style="max-width:100%;" />
+                                            </td>
+                                            <td>
+                                                <a class="pull-right btn btn-default" data-bind="click: $parent.usunTrescGodziny">Usuń</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <a class="btn btn-default pull-left" data-bind="click: dodajTrescGodziny">Dodaj</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" style="margin-top:15px;" data-target="#efekty" aria-expanded="false" aria-controls="efekty">
+                Efekty Kształcenia
+            </button>
+        </p>
+        <div class="collapse" id="efekty">
+            <div class="card card-body">
+                <style type="text/css">
+                    .tg {
+                        border-collapse: collapse;
+                        border-spacing: 0;
+                    }
+
+                        .tg td {
+                            font-family: Arial, sans-serif;
+                            font-size: 14px;
+                            padding: 10px 5px;
+                            border-style: solid;
+                            border-width: 1px;
+                            overflow: visible;
+                            word-break: normal;
+                            border-color: black;
+                        }
+
+                        .tg th {
+                            font-family: Arial, sans-serif;
+                            font-size: 14px;
+                            font-weight: normal;
+                            padding: 10px 5px;
+                            border-style: solid;
+                            border-width: 1px;
+                            overflow: visible;
+                            word-break: normal;
+                            border-color: black;
+                        }
+
+                        .tg .tg-s268 {
+                            text-align: left
+                        }
+                </style>
+                <table class="tg">
+                    <tr>
+                        <th class="tg-s268 col-xs-2" colspan="2" rowspan="2">Kierunkowe Efekty Kształcenia</th>
+                        <th class="tg-s268 col-xs-1" rowspan="2">Wymagania wstępne</th>
+                        <th class="tg-s268 col-xs-5" rowspan="2">Przedmiotowe Efekty Kształcenia</th>
+                        <th class="tg-s268 col-xs-1" data-bind="attr: {colspan: Godziny().length}">Treści kształcenia</th>
+                        <th class="tg-s268 col-xs-1" rowspan="2">Metody dydaktyczne</th>
+                        <th class="tg-s268 col-xs-1" rowspan="2"><span style="font-weight:normal">Metody  oceniania</span></th>
+                        <th class="tg-s268 col-xs-1" rowspan="2"><span style="font-weight:normal">Treść</span></th>
+                    </tr>
+                    <tr data-bind="foreach: Godziny">
+                        <td class="tg-s268" data-bind="html: krotkaNazwa"></td>
+                    </tr>
+                    <!-- ko foreach: Efekty -->
+                    <tr>
+                        <td class="tg-s268 col-xs-1" data-bind="html: Skrot"></td>
+                        <td class="tg-s268 col-xs-1" data-bind="html: Opis"></td>
+                        <td class="tg-s268 col-xs-1"><input type="checkbox" data-bind="checked: WymaganiaWstepne" /></td>
+                        <td class="tg-s268 col-xs-2">
+                            <!-- ko if: PrzedmiotoweEfektyKsztalceniaWymagane -->
+                            <textarea class="form-control" data-bind="textInput: PrzedmiotoweEfektyKsztalcenia" required="required" style="max-width:100%; min-height:100px"></textarea>
+                            <!-- /ko -->
+                            <!-- ko ifnot: PrzedmiotoweEfektyKsztalceniaWymagane -->
+                            <textarea class="form-control" data-bind="textInput: PrzedmiotoweEfektyKsztalcenia" style="max-width:100%; min-height:100px"></textarea>
+                            <!-- /ko -->
+                        </td>
+                        <!-- ko foreach: Godziny -->
+                        <td class="tg-s268 selectpicker-button col-xs-1">
+                            <select class="form-control selectpicker"
+                                    title="Wybierz"
+                                    multiple="multiple"
+                                    data-bind="options: Tresci,
+                                           optionsText: function(item) { item.Nazwa(); return item.krotkaNazwa() + item.Skrot();},
+                                           optionsValue: 'Skrot',
+                                           optionsAfterRender: tooltipName,
+                                           selectedOptions: WybraneTresci
+                                "></select>
+                        </td>
+                        <!-- /ko -->
+                        <td class="tg-s268 selectpicker-button">
+                            <select class="form-control selectpicker col-xs-1"
+                                    multiple="multiple"
+                                    title="Wybierz MP"
+                                    data-toggle="tooltip"
+                                    data-bind="options: MetodyPodajace,
+                                    optionsText: function(item) { item.MetodaId(); return 'MP' + item.Skrot();},
+                                    optionsValue: 'Skrot',
+                                    optionsAfterRender: tooltipNameMetodyPodajace,
+                                    selectedOptions: WybraneMetodyPodajace
+                        "></select>
+                            <select class="form-control selectpicker col-xs-1"
+                                    multiple="multiple"
+                                    title="Wybierz MC"
+                                    data-bind="options: MetodyPraktyczne,
+                                    optionsText: function(item) { item.MetodaId(); return 'MC' + item.Skrot();},
+                                    optionsValue: 'Skrot',
+                                    optionsAfterRender: tooltipNameMetodyPraktyczne,
+                                    selectedOptions: WybraneMetodyPraktyczne
+                        "></select>
+                            <select class="form-control selectpicker col-xs-1"
+                                    multiple="multiple"
+                                    title="Wybierz MS"
+                                    data-bind="options: MetodyProblemowe,
+                                    optionsText: function(item) { item.MetodaId(); return 'MS' + item.Skrot();},
+                                    optionsValue: 'Skrot',
+                                    optionsAfterRender: tooltipNameMetodyProblemowe,
+                                    selectedOptions: WybraneMetodyProblemowe
+                        "></select>
+                            <select class="form-control selectpicker col-xs-1"
+                                    multiple="multiple"
+                                    title="Wybierz ME"
+                                    data-bind="options: MetodyEksponujace,
+                                    optionsText: function(item) { item.MetodaId(); return 'ME' + item.Skrot();},
+                                    optionsValue: 'Skrot',
+                                    optionsAfterRender: tooltipNameMetodyEksponujace,
+                                    selectedOptions: WybraneMetodyEksponujace
+                        "></select>
+                        </td>
+                        <td class="tg-s268 selectpicker-button">
+                            <select class="form-control selectpicker col-xs-1"
+                                    multiple="multiple"
+                                    title="Wybierz MO"
+                                    data-bind="options: MetodyOceniania,
+                                    optionsText: function(item) { item.MetodaId(); return 'MO' + item.Skrot();},
+                                    optionsValue: 'Skrot',
+                                    optionsAfterRender: tooltipNameMetodyOceniania,
+                                    selectedOptions: WybraneMetodyOceniania
+                        "></select>
+                        </td>
+                        <td class="tg-s268 col-xs-1" data-bind="html: LiczbaTresci"></td>
+                    </tr>
+                    <!-- /ko -->
+                </table>
+            </div>
+        </div>
+        <p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" style="margin-top:15px;" data-target="#obciazenie" aria-expanded="false" aria-controls="obciazenie">
+                Obciążenie pracą studenta
+            </button>
+        </p>
+        <div class="collapse" id="obciazenie">
+            <div class="card card-body">
+                <style type="text/css">
+                    .tg {
+                        border-collapse: collapse;
+                        border-spacing: 0;
+                    }
+
+                        .tg td {
+                            font-family: Arial, sans-serif;
+                            font-size: 14px;
+                            padding: 10px 5px;
+                            border-style: solid;
+                            border-width: 1px;
+                            overflow: visible;
+                            word-break: normal;
+                            border-color: black;
+                        }
+
+                        .tg th {
+                            font-family: Arial, sans-serif;
+                            font-size: 14px;
+                            font-weight: normal;
+                            padding: 10px 5px;
+                            border-style: solid;
+                            border-width: 1px;
+                            overflow: visible;
+                            word-break: normal;
+                            border-color: black;
+                        }
+                </style>
+                <table class="tg">
+                    <tr>
+                        <td rowspan="2"></td>
+                        <td data-bind="attr: {colspan: Godziny().length+1}">Studia stacjonarne</td>
+                        <td data-bind="attr: {rowspan: FormaPracy().length+5}"></td>
+                        <td data-bind="attr: {colspan: Godziny().length+1}">Studia niestacjonarne</td>
+                    </tr>
+                    <tr>
+                        <td data-bind="attr: {colspan: Godziny().length+1}">
+                            Obciążenie pracą studenta (godziny)
+                        </td>
+                        <td data-bind="attr: {colspan: Godziny().length+1}">
+                            Obciążenie pracą studenta (godziny)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Forma pracy studenta
+                        </td>
+
+                        <!-- ko foreach: Godziny -->
+                        <td class="tg-s268" data-bind="html: krotkaNazwa"></td>
+                        <!-- /ko -->
+                        <td>
+                            Razem
+                        </td>
+                        <!-- ko foreach: Godziny -->
+                        <td class="tg-s268" data-bind="html: krotkaNazwa"></td>
+                        <!-- /ko -->
+                        <td>
+                            Razem
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Zajęcia z bezpośrednim udziałem nauczyciela
+                        </td>
+
+                        <!-- ko foreach: Godziny -->
+                        <td class="tg-s268" data-bind="html: Stacjonarne"></td>
+                        <!-- /ko -->
+                        <td data-bind="html: zNauczycielemRazemStacjonarne"></td>
+                        <!-- ko foreach: Godziny -->
+                        <td class="tg-s268" data-bind="html: Niestacjonarne"></td>
+                        <!-- /ko -->
+                        <td data-bind="html: zNauczycielemRazemNiestacjonarne"></td>
+                    </tr>
+                    <!-- ko foreach: FormaPracy -->
+                    <tr>
+                        <td data-bind="html: Opis"></td>
+                        <!-- ko foreach: Dzienne -->
+                        <td>
+                            <input type="number" maxlength="3" data-bind="textInput: Godzin" />
+                        </td>
+                        <!-- /ko -->
+                        <td data-bind="html: dzienneRazem"></td>
+                        <!-- ko foreach: Zaoczne -->
+                        <td>
+                            <input type="number" maxlength="3" data-bind="textInput: Godzin" />
+                        </td>
+                        <!-- /ko -->
+                        <td data-bind="html: zaoczneRazem"></td>
+
+                    </tr>
+
+                    <!-- /ko -->
+
+                    <tr>
+                        <td>Suma:</td>
+                        <!-- ko foreach: FormaPracySumyDzienne -->
+                        <td data-bind="html: suma"></td>
+                        <!-- /ko -->
+                        <td data-bind="html: dzienneRazemFull"></td>
+                        <!-- ko foreach: FormaPracySumyZaoczne -->
+                        <td data-bind="html: suma"></td>
+                        <!-- /ko -->
+                        <td data-bind="html: zaoczneRazemFull"></td>
+                    </tr>
+                </table>
+
+
+                <br />
+
+
+                <table class="tg">
+                    <tr>
+                        <td></td>
+                        <td data-bind="attr: {colspan: Godziny().length+1}">
+                            Obciążenie pracą studenta (punkty ECTS)
+                        </td>
+                        <td data-bind="attr: {rowspan: FormaPracy().length+5}"></td>
+                        <td data-bind="attr: {colspan: Godziny().length+1}">
+                            Obciążenie pracą studenta (punkty ECTS)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Forma pracy studenta
+                        </td>
+                        <!-- ko foreach: Godziny -->
+                        <td class="tg-s268" data-bind="html: krotkaNazwa"></td>
+                        <!-- /ko -->
+                        <td>
+                            Razem
+                        </td>
+                        <!-- ko foreach: Godziny -->
+                        <td class="tg-s268" data-bind="html: krotkaNazwa"></td>
+                        <!-- /ko -->
+                        <td>
+                            Razem
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td>
+                            Zajęcia z bezpośrednim udziałem nauczyciela
+                        </td>
+
+                        <!-- ko foreach: Godziny -->
+                        <td class="tg-s268" data-bind="html: StacjonarneEcts"></td>
+                        <!-- /ko -->
+                        <td data-bind="html: zNauczycielemRazemStacjonarneEcts"></td>
+                        <!-- ko foreach: Godziny -->
+                        <td class="tg-s268" data-bind="html: NiestacjonarneEcts"></td>
+                        <!-- /ko -->
+                        <td data-bind="html: zNauczycielemRazemNiestacjonarneEcts"></td>
+                    </tr>
+                    <!-- ko foreach: FormaPracy -->
+                    <tr>
+                        <td data-bind="html: Opis"></td>
+                        <!-- ko foreach: Dzienne -->
+                        <td>
+                            <input disabled data-bind="textInput: ects" />
+                        </td>
+                        <!-- /ko -->
+                        <td data-bind="html: dzienneRazemEcts"></td>
+                        <!-- ko foreach: Zaoczne -->
+                        <td>
+                            <input disabled data-bind="textInput: ects" />
+                        </td>
+                        <!-- /ko -->
+                        <td data-bind="html: zaoczneRazemEcts"></td>
+
+                    </tr>
+
+                    <!-- /ko -->
+
+                    <tr>
+                        <td>Minimalnie:</td>
+                        <!-- ko foreach: FormaPracySumyDzienne -->
+                        <td data-bind="html: (Number(suma()) / 30).toFixed(1)"></td>
+                        <!-- /ko -->
+                        <td data-bind="html: dzienneRazemEcts"></td>
+                        <!-- ko foreach: FormaPracySumyZaoczne -->
+                        <td data-bind="html: (Number(suma()) / 30).toFixed(1)"></td>
+                        <!-- /ko -->
+                        <td data-bind="html: zaoczneRazemEcts"></td>
+                    </tr>
+                    <tr>
+                        <td>Maksymalnie:</td>
+                        <!-- ko foreach: FormaPracySumyDzienne -->
+                        <td data-bind="html: (Number(suma()) / 25).toFixed(1)"></td>
+                        <!-- /ko -->
+                        <td data-bind="html: dzienneRazemEctsMax"></td>
+                        <!-- ko foreach: FormaPracySumyZaoczne -->
+                        <td data-bind="html: (Number(suma()) / 25).toFixed(1)"></td>
+                        <!-- /ko -->
+                        <td data-bind="html: zaoczneRazemEctsMax"></td>
+                    </tr>
+                </table>
+                <div align="center"><font size="20">Punkty ECTS za przedmiot: <b><font color="red"><span data-bind="html: ECTS"></span></font></b></font></div>
+            </div>
+        </div>
+        <p align="center"><button class="form-control btn-success" type="submit" style="margin:15px;" data-bind="click: save">Zapisz</button></p>
+    </div>
+</form>
+<script>
+    $('.sectionHeader').on("click", function () {
+        $('#' + this.id + "Details").toggleClass("closed");
+    })
+    var saveURL = '@Url.Action("Wypelnij", "Karta")';
+    var homeURL = '@Url.Action("Index", "Home")';
+    var model = @Html.Raw(Json.Encode(Model));
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            showSubtext: true
+        })
+    });
+</script>
+
+<script src="~/Scripts/Wypelnij.js"></script>
+
+
+@*<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+    var j$112 = $.noConflict(true);
+    (function (jQuery) {
+        $(".sortable").sortable();
+        $(".sortable").disableSelection();
+    })(j$112);
+</script>*@

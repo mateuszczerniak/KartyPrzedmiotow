@@ -1,0 +1,53 @@
+﻿@model IEnumerable<KartyPrzedmiotow2.Models.WydzialListElement>
+
+@{
+    ViewBag.Title = "Wydziały";
+}
+
+<h2>Wydziały</h2>
+
+<p>
+    @Html.ActionLink("Dodaj wydział", "WydzialCreate", null, htmlAttributes: new { @class = "btn btn-primary", @role = "button", @style = "margin:2px" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nazwa)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LiczbaProgramow)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LiczbaKierunkow)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LiczbaUzytkownikow)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nazwa)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LiczbaProgramow)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LiczbaKierunkow)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LiczbaUzytkownikow)
+        </td>
+        <td>
+            @Html.ActionLink("Kierunki", "Kierunki", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-primary", @role = "button", @style = "margin:2px" })
+            @if (item.LiczbaKierunkow + item.LiczbaProgramow + item.LiczbaUzytkownikow == 0)
+            {
+                <text>| @Html.ActionLink("Usuń", "WydzialDelete", new { id = item.Id })</text>
+            }
+        </td>
+    </tr>
+}
+
+</table>
